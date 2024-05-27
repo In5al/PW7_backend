@@ -1,191 +1,240 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "CRUD API",
-      "version": "1.0.0"
-    },
-    "host": "localhost:4000",
-    "basePath": "/",
-    "schemes": [
-      "http"
-    ],
-    "paths": {
-      "/entities": {
-        "get": {
-          "summary": "Get entities",
-          "parameters": [
-            {
-              "name": "page",
-              "in": "query",
-              "type": "integer"
-            },
-            {
-              "name": "limit",
-              "in": "query",
-              "type": "integer"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Entity"
-                }
-              }
-            }
+  "swagger": "2.0",
+  "info": {
+    "title": "CRUD API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:4000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+    }
+  },
+  "paths": {
+    "/entities": {
+      "get": {
+        "summary": "Get entities",
+        "security": [
+          {
+            "Bearer": []
           }
-        },
-        "post": {
-          "summary": "Create an entity",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/NewEntity"
-              }
-            }
-          ],
-          "responses": {
-            "201": {
-              "description": "Created",
-              "schema": {
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
                 "$ref": "#/definitions/Entity"
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
-      "/entities/{id}": {
-        "put": {
-          "summary": "Update an entity",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "type": "integer"
-            },
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/UpdateEntity"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "schema": {
-                "$ref": "#/definitions/Entity"
-              }
-            },
-            "404": {
-              "description": "Entity not found"
+      "post": {
+        "summary": "Create an entity",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewEntity"
             }
           }
-        },
-        "delete": {
-          "summary": "Delete an entity",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "type": "integer"
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Entity"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "schema": {
-                "$ref": "#/definitions/Entity"
-              }
-            },
-            "404": {
-              "description": "Entity not found"
-            }
-          }
-        }
-      },
-      "/token": {
-        "post": {
-          "summary": "Generate a JWT token",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/TokenRequest"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "schema": {
-                "$ref": "#/definitions/TokenResponse"
-              }
-            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
     },
-    "definitions": {
-      "Entity": {
-        "type": "object",
-        "properties": {
-          "id": {
+    "/entities/{id}": {
+      "put": {
+        "summary": "Update an entity",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
             "type": "integer"
           },
-          "name": {
-            "type": "string"
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateEntity"
+            }
           }
-        }
-      },
-      "NewEntity": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateEntity": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "TokenRequest": {
-        "type": "object",
-        "properties": {
-          "permissions": {
-            "type": "array",
-            "items": {
-              "type": "string"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Entity"
             }
           },
-          "role": {
-            "type": "string"
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Entity not found"
           }
         }
       },
-      "TokenResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string"
+      "delete": {
+        "summary": "Delete an entity",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Entity"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Entity not found"
+          }
+        }
+      }
+    },
+    "/token": {
+      "post": {
+        "summary": "Generate a JWT token",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/TokenResponse"
+            }
           }
         }
       }
     }
+  },
+  "definitions": {
+    "Entity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "NewEntity": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateEntity": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "TokenRequest": {
+      "type": "object",
+      "properties": {
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "TokenResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    }
   }
+}
